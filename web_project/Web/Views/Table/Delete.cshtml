@@ -1,0 +1,15 @@
+﻿@model Domain.Entities.Table
+
+<h2>Удалить стол?</h2>
+<table class="table">
+    <tr><th>ID</th><td>@Model.ID_table</td></tr>
+    <tr><th>Номер</th><td>@Model.Number</td></tr>
+    <tr><th>Количество мест</th><td>@Model.Seats_count</td></tr>
+    <tr><th>Тип</th><td>@Model.Type</td></tr>
+    <tr><th>Статус</th><td>@Model.Status</td></tr>
+</table>
+<form asp-action="DeleteConfirmed">
+    <input type="hidden" asp-for="ID_table"/>
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>
