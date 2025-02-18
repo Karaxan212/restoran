@@ -1,0 +1,32 @@
+﻿@model Web.Entities.Table
+
+@{
+    ViewData["Title"] = "Добавить стол";
+}
+
+<h2>Добавить стол</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Number" class="control-label"></label>
+        <input asp-for="Number" class="form-control" />
+        <span asp-validation-for="Number" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SeatsCount" class="control-label"></label>
+        <input asp-for="SeatsCount" class="form-control" />
+        <span asp-validation-for="SeatsCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Type" class="control-label"></label>
+        <input asp-for="Type" class="form-control" />
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status" class="control-label"></label>
+        <input asp-for="Status" class="form-control" />
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a asp-action="Index" class="btn btn-secondary">Назад</a>
+</form>
