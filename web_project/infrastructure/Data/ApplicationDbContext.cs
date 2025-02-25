@@ -11,5 +11,15 @@ namespace Infrastructure.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Table> Tables { get; set; }
+
+        public object FirstOrDefault(Func<object, bool> value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Max(Func<object, object> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

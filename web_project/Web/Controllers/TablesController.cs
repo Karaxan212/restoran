@@ -1,33 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Infrastructure.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Web.Entities;
 
-namespace TablesController.Controllers
+namespace Web.Controllers
 {
-    public class Table
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
     public class TablesController : Controller
     {
-        private static List<Table> _tables = new List<Table>
+        private readonly ApplicationDbContext _context;
+
+        public TablesController(ApplicationDbContext context)
         {
-            new Table { Id = 1, Name = "Table1" },
-            new Table { Id = 2, Name = "Table2" }
-        };
+            _context = context;
+        }
 
         // GET: /Tables/
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_tables);
+            var tables = await _context.Tables.ToListAsync();
+            return View(tables);
         }
 
         // GET: /Tables/Details/5
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var table = _tables.FirstOrDefault(t => t.Id == id);
+            var table = await _context.Tables.FindAsync(id);
             if (table == null)
             {
                 return NotFound();
@@ -44,21 +41,21 @@ namespace TablesController.Controllers
         // POST: /Tables/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Table table)
+        public async Task<IActionResult> Create(Table table)
         {
             if (ModelState.IsValid)
             {
-                table.Id = _tables.Max(t => t.Id) + 1;
-                _tables.Add(table);
+                _context.Tables.Add(table);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(table);
         }
 
         // GET: /Tables/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var table = _tables.FirstOrDefault(t => t.Id == id);
+            var table = await _context.Tables.FindAsync(id);
             if (table == null)
             {
                 return NotFound();
@@ -69,25 +66,37 @@ namespace TablesController.Controllers
         // POST: /Tables/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Table table)
+        public async Task<IActionResult> Edit(int id, Table table)
         {
+            if (id != table.Id)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                var existingTable = _tables.FirstOrDefault(t => t.Id == table.Id);
-                if (existingTable == null)
+                try
                 {
-                    return NotFound();
+                    _context.Update(table);
+                    await _context.SaveChangesAsync();
                 }
-                existingTable.Name = table.Name;
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await TableExists(table.Id))
+                    {
+                        return NotFound();
+                    }
+                    throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(table);
         }
 
         // GET: /Tables/Delete/5
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var table = _tables.FirstOrDefault(t => t.Id == id);
+            var table = await _context.Tables.FindAsync(id);
             if (table == null)
             {
                 return NotFound();
@@ -98,15 +107,20 @@ namespace TablesController.Controllers
         // POST: /Tables/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var table = _tables.FirstOrDefault(t => t.Id == id);
+            var table = await _context.Tables.FindAsync(id);
             if (table != null)
             {
-                _tables.Remove(table);
+                _context.Tables.Remove(table);
+                await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
         }
+
+        private async Task<bool> TableExists(int id)
+        {
+            return await _context.Tables.AnyAsync(e => e.Id == id);
+        }
     }
 }
-                                      
