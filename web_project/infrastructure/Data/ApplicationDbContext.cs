@@ -1,25 +1,41 @@
-﻿using Application.Interfaces.Common;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces.Common;
 using Web.Entities;
 
 namespace Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>, IApplicationDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options) { }
 
+        public DbSet<Booking> Bookings { get; set; }
         public DbSet<Table> Tables { get; set; }
+        public DbSet<BookingTables> BookingTables { get; set; }
 
-        public object FirstOrDefault(Func<object, bool> value)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
-        public int Max(Func<object, object> value)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<BookingTables>()
+                .HasKey(bt => bt.ID_BookingTable);
+
+            modelBuilder.Entity<BookingTables>()
+                .HasOne(bt => bt.Booking)
+                .WithMany(b => b.BookingTables)
+                .HasForeignKey(bt => bt.ID_booking);
+
+            modelBuilder.Entity<BookingTables>()
+                .HasOne(bt => bt.Table)
+                .WithMany(t => t.BookingTables)
+                .HasForeignKey(bt => bt.ID_table);
         }
     }
 }
