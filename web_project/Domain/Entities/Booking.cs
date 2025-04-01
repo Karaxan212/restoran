@@ -7,9 +7,6 @@ namespace Web.Entities
         public int Id { get; set; }
 
         [Required]
-        public int ID_user { get; set; }
-
-        [Required]
         public int ID_table { get; set; } // Связь со столиком
 
         [Required]
@@ -20,7 +17,7 @@ namespace Web.Entities
         public string Status { get; set; }
 
         // Навигационные свойства
-        public Table Table { get; set; }
-        public ICollection<BookingTables> BookingTables { get; set; }
+        public Table? Table { get; set; } 
+        public ICollection<BookingTables> BookingTables { get; set; } = new List<BookingTables>();
     }
 }

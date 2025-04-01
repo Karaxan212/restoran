@@ -11,6 +11,5 @@ namespace Web.Entities
 
         public int TableId { get; set; } // Связь с Table
         public Table Table { get; set; }
-        public int ID_table { get; set; }
     }
 }

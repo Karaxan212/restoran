@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401042521_Booking4")]
+    partial class Booking4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,7 +229,7 @@ namespace infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ID_table")
                         .HasColumnType("integer");
@@ -237,9 +239,12 @@ namespace infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int?>("TableId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ID_table");
+                    b.HasIndex("TableId");
 
                     b.ToTable("Bookings");
                 });
@@ -255,6 +260,9 @@ namespace infrastructure.Migrations
                     b.Property<int>("ID_booking")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ID_table")
+                        .HasColumnType("integer");
+
                     b.Property<int>("TableId")
                         .HasColumnType("integer");
 
@@ -262,7 +270,7 @@ namespace infrastructure.Migrations
 
                     b.HasIndex("ID_booking");
 
-                    b.HasIndex("TableId");
+                    b.HasIndex("ID_table");
 
                     b.ToTable("BookingTables");
                 });
@@ -348,10 +356,8 @@ namespace infrastructure.Migrations
             modelBuilder.Entity("Web.Entities.Booking", b =>
                 {
                     b.HasOne("Web.Entities.Table", "Table")
-                        .WithMany("Bookings")
-                        .HasForeignKey("ID_table")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("TableId");
 
                     b.Navigation("Table");
                 });
@@ -366,7 +372,7 @@ namespace infrastructure.Migrations
 
                     b.HasOne("Web.Entities.Table", "Table")
                         .WithMany("BookingTables")
-                        .HasForeignKey("TableId")
+                        .HasForeignKey("ID_table")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -383,8 +389,6 @@ namespace infrastructure.Migrations
             modelBuilder.Entity("Web.Entities.Table", b =>
                 {
                     b.Navigation("BookingTables");
-
-                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401051408_Booking5")]
+    partial class Booking5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,9 +239,12 @@ namespace infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int?>("TableId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ID_table");
+                    b.HasIndex("TableId");
 
                     b.ToTable("Bookings");
                 });
@@ -348,10 +353,8 @@ namespace infrastructure.Migrations
             modelBuilder.Entity("Web.Entities.Booking", b =>
                 {
                     b.HasOne("Web.Entities.Table", "Table")
-                        .WithMany("Bookings")
-                        .HasForeignKey("ID_table")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("TableId");
 
                     b.Navigation("Table");
                 });
@@ -383,8 +386,6 @@ namespace infrastructure.Migrations
             modelBuilder.Entity("Web.Entities.Table", b =>
                 {
                     b.Navigation("BookingTables");
-
-                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

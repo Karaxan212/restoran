@@ -1,0 +1,47 @@
+﻿@model Web.Entities.Booking
+
+@{
+    ViewData["Title"] = "Редактировать бронь";
+}
+
+<h2>Редактировать бронь</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="ID_table" >Выберите стол(ы)</label>
+        <select class="form-control" asp-for="ID_table">
+            @if (ViewBag.Tables != null)
+            {
+                @foreach (var table1 in ViewBag.Tables)
+                {
+                        <option value="@table1.Id" selected="@(table1.Id == Model.ID_table ? "selected" : null)">
+                                Столик №@table1.Number
+                            </option>
+                }
+            }
+    </select>
+    <span asp-validation-for="ID_table" class="text-danger"></span>
+</div>
+
+
+    <div class="form-group">
+        <label asp-for="Date"></label>
+        <input asp-for="Date" type="datetime-local" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select asp-for="Status" class="form-control">
+            <option value="Confirmed">Confirmed</option>
+            <option value="Pending">Pending</option>
+            <option value="Canceled">Canceled</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-action="Index" class="btn btn-secondary">Назад</a>
+</form>

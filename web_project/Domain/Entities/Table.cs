@@ -9,5 +9,6 @@
         public string Status { get; set; }
 
         public ICollection<BookingTables> BookingTables { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
     }
 }

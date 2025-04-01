@@ -24,6 +24,11 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Booking>()
+                .HasOne(bt => bt.Table)
+                .WithMany(b => b.Bookings)
+                .HasForeignKey(bt => bt.ID_table);
+
             modelBuilder.Entity<BookingTables>()
                 .HasKey(bt => bt.ID_BookingTable);
 
@@ -35,7 +40,7 @@ namespace Infrastructure.Data
             modelBuilder.Entity<BookingTables>()
                 .HasOne(bt => bt.Table)
                 .WithMany(t => t.BookingTables)
-                .HasForeignKey(bt => bt.ID_table);
+                .HasForeignKey(bt => bt.TableId);
         }
     }
 }

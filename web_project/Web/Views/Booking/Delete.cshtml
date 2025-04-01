@@ -1,0 +1,19 @@
+﻿@model Web.Entities.Booking
+
+@{
+    ViewData["Title"] = "Удаление брони";
+}
+
+<h2>Вы уверены, что хотите удалить эту бронь?</h2>
+
+<div>
+    <h4>Столик: @Model.Table</h4>
+    <p>Дата: @Model.Date</p>
+    <p>Статус: @Model.Status</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>

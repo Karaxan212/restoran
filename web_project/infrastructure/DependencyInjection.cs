@@ -29,6 +29,8 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         return services;
     }
 }
